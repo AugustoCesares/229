@@ -1,0 +1,58 @@
+services:
+    flussonic:
+        restart: always
+        privileged: true
+        environment:
+            - TZ=America/Sao_Paulo
+            - container=docker
+            - VIDEO_GID=44
+        cap_add:
+            - SYS_ADMIN              
+        volumes:
+            - /etc/timezone:/etc/timezone:ro
+            - /etc/localtime:/etc/localtime:ro    
+            - /sys/fs/cgroup:/sys/fs/cgroup:rw
+            - /opt/ssl:/opt/ssl:rw
+            - /opt/conf:/opt/conf:rw
+            - /dev/shm:/usr/share/nginx/live:rw
+        ports:
+            - '3700:3700/udp'
+            - '3701:3701/udp'
+            - '3702:3702/udp'
+            - '3703:3703/udp'
+            - '3704:3704/udp'
+            - '3705:3705/udp'
+            - '3700:3700/tcp'
+            - '3701:3701/tcp'
+            - '3702:3702/tcp'
+            - '3703:3703/tcp'
+            - '3704:3704/tcp'
+            - '3705:3705/tcp'
+            - '8383:89'
+            - '8822:22'
+            - '8885:8885'
+            - '8888:8888'
+            - '8686:8686'
+            - '8280:8280'  
+            - '289:89'
+            - '1935:1935'
+            - '88:88'
+        image: cooliobr/flussonic:1.1_rc2
+        stdin_open: true # docker run -i
+        tty: true        # docker run -t
+        #network_mode: host
+        networks:
+          network:
+            ipv4_address: 172.22.0.2
+        shm_size: '24gb'
+        deploy:
+          resources:
+            limits:
+              cpus: '10.00'
+networks:
+  network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.22.0.0/24
+          gateway: 172.22.0.1
